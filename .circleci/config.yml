@@ -9,7 +9,7 @@ orbs:
  
 jobs:
   build:
-    executor: android/android
+    executor: android/android java17
     steps:
       - checkout
       - restore_cache:
@@ -19,7 +19,6 @@ jobs:
           command: sudo chmod +x ./gradlew
       - run:
           name: Download Dependencies
-          executor: java17
           command: ./gradlew androidDependencies
       - save_cache:
           key: 'android-orb-v1-{{ epoch }}'
@@ -28,14 +27,12 @@ jobs:
             - ~/.android/cache
       - run:
           name: Run Build
-          executor: java17
           command: ./gradlew build
       - store_artifacts: 
           path: app/build/reports
           destination: reports
       - run:
           name: Run Tests
-          executor: java17
           command: ./gradlew lint test
       - store_test_results:
           path: app/build/test-results
